@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wazuh-installer-config
+  namespace: wazuh
+data:
+  install.sh: |
+    #!/bin/bash
+    yum update
+    yum install -y curl
+
+    curl -sO https://packages.wazuh.com/4.x/yum/wazuh-agent-4.12.0-1.x86_64.rpm
+    yum localinstall -y wazuh-agent-4.12.0-1.x86_64.rpm
+
+    echo "copying ossec files"
+    cp /var/ossec.conf /var/ossec/etc/
+    cp /var/authd.pass /var/ossec/etc/
+
+    /var/ossec/bin/agent-auth -m <MANAGER-IP>
+    /var/ossec/bin/wazuh-control start
+    /var/ossec/bin/wazuh-control restart
+

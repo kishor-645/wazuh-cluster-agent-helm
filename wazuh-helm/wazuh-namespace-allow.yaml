@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-all-in-wazuh-ns
+  namespace: wazuh
+spec:
+  podSelector: {}  # All pods in ns
+  policyTypes:
+
+  - Ingress
+  - Egress
+  ingress:
+  - from: []  # From any pod in same ns
+    ports: []  # All ports (TCP/UDP)
+  egress:
+  - to: []  # To any pod in same ns
+    ports: []  # All ports (TCP/UDP)

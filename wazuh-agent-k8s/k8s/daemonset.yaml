@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: wazuh-agent
+  namespace: wazuh
+spec:
+  selector:
+    matchLabels:
+      job: wazuh-installer
+  template:
+    metadata:
+      labels:
+        job: wazuh-installer
+    spec:
+      hostPID: true
+      restartPolicy: Always
+      #imagePullSecrets:    #Only Enable if it's required
+      #   - name: wazuh-acr-pull      
+      containers:
+      - image: your-registry/wazuh-agent:5
+        imagePullPolicy: Always
+        name: wazuh-installer
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: install-script
+          mountPath: /mnt
+        - name: host-mount
+          mountPath: /host
+      volumes:
+      - name: install-script
+        configMap:
+          name: wazuh-installer-config
+      - name: host-mount
+        hostPath:
+          path: /var
