@@ -358,6 +358,26 @@ opensearch_security.session.keepalive: false
     <description>Ignore Promtail SELinux denials until SELinux is fixed.</description>
   </rule>
 
+  <!-- Silence repeating node_exporter SELinux denials -->
+  <rule id="100007" level="0">
+    <if_sid>80730</if_sid>
+    <match>node_exporter</match>
+    <description>Ignore node_exporter SELinux denials to reduce noise.</description>
+  </rule>
+
+  <!-- Silence repetitive iSCSI reconnect noise -->
+  <rule id="100008" level="0">
+    <program_name>iscsid</program_name>
+    <match>cannot make a connection</match>
+    <description>Ignore repetitive iSCSI connection retry noise.</description>
+  </rule>
+
+  <rule id="100009" level="0">
+    <program_name>iscsid</program_name>
+    <match>connect to</match>
+    <description>Ignore repetitive iSCSI connection refused noise.</description>
+  </rule>
+
 </group>
 {{- end }}
 
