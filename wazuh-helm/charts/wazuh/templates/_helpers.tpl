@@ -346,6 +346,20 @@ opensearch_security.session.keepalive: false
     <group>otx,authentication,malicious_ip,</group>
   </rule>
 
+  <!-- Silence repeating kubelet restart failures -->
+  <rule id="100005" level="0">
+    <if_sid>40704</if_sid>
+    <match>kubelet.service: Main process exited</match>
+    <description>Ignore repeating Kubelet restart failures to save disk space.</description>
+  </rule>
+
+  <!-- Silence repeating promtail SELinux denials -->
+  <rule id="100006" level="0">
+    <if_sid>80730</if_sid>
+    <match>comm="promtail"</match>
+    <description>Ignore Promtail SELinux denials until SELinux is fixed.</description>
+  </rule>
+
 </group>
 {{- end }}
 
